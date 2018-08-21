@@ -1,3 +1,5 @@
+include .pingy
+
 TAG=$(shell git describe --abbrev=0 --tags)
 
 publish:
@@ -17,7 +19,10 @@ deploy: compile
 	make clean
 
 start-remote:
-	ssh rrlogan-health screen -dmSL pingy ./bin/pingy --interval 12h --site http://renaissancelogan.com --webhook https://hooks.slack.com/services/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
+	ssh $(REMOTE_NAME) screen -dmSL pingy ./bin/pingy \
+		--interval $(INTERVAL) \
+		--site $(SITE) \
+		--webhook $(WEBHOOK)
 
 stop-remote:
-	ssh rrlogan-health screen -X -S pingy kill
+	ssh $(REMOTE_NAME) screen -X -S pingy kill
